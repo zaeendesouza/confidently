@@ -32,3 +32,7 @@ confidently price, over(rep78) by(foreign)
 confidently price, over(rep78)
 
 ```
+
+This produces the following graph!
+
+![image](https://user-images.githubusercontent.com/35003392/207943717-3ffd8388-5194-425e-b89f-ce51f766028d.png)
