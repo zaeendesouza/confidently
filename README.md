@@ -9,8 +9,6 @@ This is a wrapper function for the **fantastic** package **`coefplot()`**, which
 The wrapper will then estimate the mean(s) of [`variable`], condtional on [`by()`] and/or [`over()`]. It then produces a `coefplot()` type plot with labels and titles all automatically added. Confidence intervals are estimated using "vanilla" standard errors---weights and alternative variance estimation is not allowed, at present. 
 
 ```
-* Note: all variables/values need to be labelled!
-
 clear all
 sysuse auto
 
