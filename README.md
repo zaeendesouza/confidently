@@ -18,6 +18,8 @@ sysuse auto
 label define quality 1 "Poor" 2 "Fair" 3 "Average" 4 "Good" 5 "Excellent"
 label values rep78 quality
 
+* run the do file that contains the program
+do "confidently_beta.do"
 
 * running the command with and without by() specified!
 confidently price, over(rep78) by(foreign)
