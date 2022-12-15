@@ -4,17 +4,6 @@ Author: Zaeen de Souza
 Date:   15-12-2022
 */
 
-
-clear all
-sysuse auto
-
-
-
-/// adding labels since program doesnt work without these and data should always have labels anyway
-label define quality 1 "Poor" 2 "Fair" 3 "Average" 4 "Good" 5 "Excellent"
-label values rep78 quality
-
-
 *********************************************************************************
 *                               program                                         *
 *********************************************************************************
@@ -219,7 +208,3 @@ qui use `main', clear
 macro drop call
 end	
 
-
-* run the command and see
-confidently price, over(rep78) by(foreign)
-confidently price, over(rep78)
