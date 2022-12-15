@@ -1,6 +1,6 @@
 # confidently
 
-This is a wrapper function for the **fantastic** package `**coefplot()**`, which can be viewed [here](http://repec.sowi.unibe.ch/stata/coefplot/getting-started.html). This wrapper uses three variables, at most: 
+This is a wrapper function for the **fantastic** package **`coefplot()`**, which can be viewed [here](http://repec.sowi.unibe.ch/stata/coefplot/getting-started.html). This wrapper uses three variables, at most: 
 
 1. `variable`: the variable you'd like to plot
 2. `over()`: Compulsory grouping variable
