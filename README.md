@@ -19,7 +19,7 @@ label define quality 1 "Poor" 2 "Fair" 3 "Average" 4 "Good" 5 "Excellent"
 label values rep78 quality
 
 
-* run the command and see
+* running the command with and without by() specified!
 confidently price, over(rep78) by(foreign)
 confidently price, over(rep78)
 
