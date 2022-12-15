@@ -1,6 +1,6 @@
 # confidently
 
-This is a wrapper function for the **fantastic** package **`coefplot()`**, which can be viewed [here](http://repec.sowi.unibe.ch/stata/coefplot/getting-started.html). This wrapper uses three variables, at most: 
+This is a wrapper function for the **fantastic** package **`coefplot`**, which can be viewed [here](http://repec.sowi.unibe.ch/stata/coefplot/getting-started.html). This wrapper uses three variables, *at most*: 
 
 1. `variable`: the variable you'd like estimate a mean and confidence interval for.
 2. `over()`: Compulsory grouping variable.
@@ -13,11 +13,19 @@ clear all
 sysuse auto
 
 * adding labels since program doesnt work without these and data should always have labels anyway
-label define quality 1 "Poor" 2 "Fair" 3 "Average" 4 "Good" 5 "Excellent"
-label values rep78 quality
+label def    quality 1 "Poor"     ///
+                     2 "Fair"     ///
+                     3 "Average"  ///
+                     4 "Good"     ///
+                     5 "Excellent"
+                     
+lab val rep78 quality
 
 * run the do file that contains the program
 do "confidently_beta.do"
+
+* a nice scheme to use
+set scheme white_tableau
 
 * running the command with and without by() specified!
 confidently price, over(rep78) by(foreign)
