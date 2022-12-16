@@ -4,6 +4,8 @@ Author: Zaeen de Souza
 Date:   15-12-2022
 */
 
+
+
 *********************************************************************************
 *                               program                                         *
 *********************************************************************************
@@ -14,7 +16,7 @@ program confidently
 syntax varlist [if]            /// 
                [in],           /// 
                over(varname)   /// 
-			   [by(varname)]   ///
+	       [by(varname)]   ///
 
 
 		
@@ -65,10 +67,10 @@ replace N = N-1
 /// making a matrix of summary stats
 mkmat mean /// 
       se   /// 
-	  lb   /// 
-	  ub   /// 
-	  N,  /// 
-	  matrix(R)
+      lb   /// 
+      ub   /// 
+      N,   /// 
+      matrix(R)
 mat  R = R' 
 }
 
@@ -90,7 +92,7 @@ global call "(matrix(R), se(2) df(R[5,.]))"
 	
 
 qui sum 	`varlist'
-qui local 	 var_mean = round(`r(mean)', .01)
+qui local 	 var_mean: display %4.2f `r(mean)'
 	
 /*
 making the plot using the all globals and our matrices
@@ -99,7 +101,7 @@ coefplot $call,                                      ///
 xline(`var_mean',                                    /// 
 lcolor(red))                                         ///
 ciopts(recast(rcap))                                 ///
-title("`: var la `varlist'' (average = `var_mean')", /// 
+title("`: var la `varlist'' (Mean = `var_mean')",    ///
 size(medium))                                        /// 
 ytitle("`: var la `over' '")                         ///
 xtitle("`: var la `varlist''")                       ///
@@ -137,7 +139,7 @@ means        ///
 qui{
 egen label = concat(`over'), decode p(" x ")
 replace N = N-1
-mkmat mean /// 
+mkmat mean     /// 
 	  se   /// 
 	  lb   /// 
 	  ub   /// 
@@ -177,7 +179,8 @@ qui foreach l of local levels {
 
 
 qui sum 	`varlist'
-qui local 	 var_mean = round(`r(mean)', .01)
+qui local 	 var_mean: display %4.2f `r(mean)'
+	
 	
 /*
 making the plot using the all globals and our matrices
@@ -186,7 +189,7 @@ coefplot $call,                                      ///
 xline(`var_mean',                                    /// 
 lcolor(red))                                         ///
 ciopts(recast(rcap))                                 ///
-title("`: var la `varlist'' (average = `var_mean')", /// 
+title("`: var la `varlist'' (Mean = `var_mean')",    /// 
 size(medium))                                        /// 
 ytitle("`: var la `by' '")                           ///
 xtitle("`: var la `varlist''")                       ///
@@ -208,3 +211,7 @@ qui use `main', clear
 macro drop call
 end	
 
+
+* run the command and see
+confidently price, over(rep78) by(foreign)
+confidently price, over(rep78)
