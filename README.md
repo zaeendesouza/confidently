@@ -45,8 +45,8 @@ do "confidently_beta.do"
 set scheme white_tableau
 
 * running the command with and without by() specified!
-confidently price, over(rep78) name("my_graph1") scale
-confidently price, over(rep78) by(foreign) name("my_graph2") scale
+confidently price, over(rep78) name("my_graph1")
+confidently foreign, over(rep78) name("my_graph2") scale
 
 
 ```
