@@ -14,6 +14,7 @@ It also allows for various options:
 4. `graphopts()` : General option for passing through **any** existing Satat graph customisation
 5. `scale`: To be used when `variable` is binary. If mentioned, `scale` will convert variables coded to 0 or 1, to 0 or 100, thereby scaling it to the percentage scale.
 
+```
 syntax varlist [if]            /// 
                [in],           /// 
                over(varname)   /// 
@@ -21,7 +22,7 @@ syntax varlist [if]            ///
                [name(string)]  ///
                [graphopts(string asis)] ///
 	       [scale]
-
+```
 
 The wrapper will then estimate the mean(s) of [`variable`], condtional on [`by()`] and/or [`over()`]. It then produces a `coefplot()` type plot with labels and titles all automatically added. Confidence intervals are estimated using "vanilla" standard errors; weights and alternative variance estimation is not allowed, at present, but I will add these soon, along with an option for plotting the median/group-specific medians, along with confidence intervals estimated via bootstrap.
 
