@@ -6,6 +6,23 @@ This is a wrapper function for the **fantastic** package **`coefplot`**, which c
 2. `over()`: Compulsory grouping variable.
 3. `by()`: Optional second group variable.
 
+It also allows for various options:
+
+1. `IF`: Standard Stata IF condition
+2. `IN`: Standard Stata IN condition
+3. `name("string")': A unique name for viewing or storing the graph in the Stata viewer
+4. `graphopts("string")`: General option for passing through **any** existing Satat graph customisation
+5. `scale': To be used when `variable` is binary - if mentioned, `scale` will convert variables coded to 0 or 1, to 0 or 100, thereby scaling it to the percentage scale.
+
+syntax varlist [if]            /// 
+               [in],           /// 
+               over(varname)   /// 
+	       [by(varname)]   ///
+               [name(string)]  ///
+               [graphopts(string asis)] ///
+	       [scale]
+
+
 The wrapper will then estimate the mean(s) of [`variable`], condtional on [`by()`] and/or [`over()`]. It then produces a `coefplot()` type plot with labels and titles all automatically added. Confidence intervals are estimated using "vanilla" standard errors; weights and alternative variance estimation is not allowed, at present, but I will add these soon, along with an option for plotting the median/group-specific medians, along with confidence intervals estimated via bootstrap.
 
 ```
@@ -28,11 +45,8 @@ do "confidently_beta.do"
 set scheme white_tableau
 
 * running the command with and without by() specified!
-confidently price, over(rep78) by(foreign)
-confidently price, over(rep78)
+confidently price, over(rep78) name("my_graph1") scale
+confidently price, over(rep78) by(foreign) name("my_graph2") scale
+
 
 ```
-
-This produces the following graph!
-
-![image](https://user-images.githubusercontent.com/35003392/207943717-3ffd8388-5194-425e-b89f-ce51f766028d.png)
