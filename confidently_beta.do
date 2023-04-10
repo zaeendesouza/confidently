@@ -5,6 +5,19 @@ Date:   15-12-2022
 */
 
 
+clear all
+set scheme white_tableau
+sysuse auto
+
+
+/// adding labels since program doesnt work without these and data should always have labels anyway
+label define quality 1 "Poor"    /// 
+                     2 "Fair"    /// 
+					 3 "Average" /// 
+					 4 "Good"    /// 
+					 5 "Excellent"
+lab val rep78 quality
+
 
 *********************************************************************************
 *                               program                                         *
@@ -17,7 +30,9 @@ syntax varlist [if]            ///
                [in],           /// 
                over(varname)   /// 
 	       [by(varname)]   ///
-
+               [name(string)]  ///
+               [graphopts(string asis)] ///
+	       [scale]
 
 		
 	
@@ -38,8 +53,9 @@ qui keep if `touse' == 1
 cap which coefplot
 if _rc == 111{
 			
-	display as err "This wrapper function requires the package coefplot."
-	display as err "You need to run: ssc install coefplot, replace"
+	display as err "Sorry but this wrapper function requires the package coefplot!"
+	display as err "You need to run:" 
+	display as err "ssc install coefplot, replace"
 	exit 198
 
 }
@@ -53,24 +69,24 @@ if "`by'" =="" {
 preserve
 
 
-qui statsby, /// 
-by(`over')   /// 
-clear:       /// 
-ci           /// 
-means        /// 
+qui statsby,  /// 
+by(`over')    /// 
+clear:        /// 
+ci            /// 
+means         /// 
 `varlist'
 
 qui{
 egen label = concat(`over'), decode p(" x ")
 /// calculates the correct group-wise DoF --- note: DoF = N-1 foreach group mean
-replace N = N-1
+replace N  = N-1
 /// making a matrix of summary stats
 mkmat mean /// 
       se   /// 
-      lb   /// 
-      ub   /// 
-      N,   /// 
-      matrix(R)
+	  lb   /// 
+	  ub   /// 
+	  N,   /// 
+	  matrix(R)
 mat  R = R' 
 }
 
@@ -78,7 +94,7 @@ mat  R = R'
 qui{
 levelsof `over', local(levels)
 local lbls
-foreach z of local levels {
+foreach   z of local levels {
     local lbl : label (`over') `z'
     local lbls      `" `lbls' "`lbl'" "'
 }
@@ -87,40 +103,72 @@ matrix colnames R = `lbls'
 restore
 }
 
-//// creating a generalised syntax to generate the coefplot() using the matrix made earlier
+//// syntax to make a plot using coefplot() via a matrix
 global call "(matrix(R), se(2) df(R[5,.]))"
 	
 
 qui sum 	`varlist'
 qui local 	 var_mean: display %4.2f `r(mean)'
-	
+
+
 /*
 making the plot using the all globals and our matrices
 */
-coefplot $call,                                      ///
-xline(`var_mean',                                    /// 
-lcolor(red))                                         ///
-ciopts(recast(rcap))                                 ///
-title("`: var la `varlist'' (Mean = `var_mean')",    ///
-size(medium))                                        /// 
-ytitle("`: var la `over' '")                         ///
-xtitle("`: var la `varlist''")                       ///
-mlabel                                               /// 
-format(%9.2f)                                        /// 
-mlabposition(12)                                     ///
-legend(subtitle("`: var la `over' '",                /// 
-size(small)))                                        /// 
-legend(position(6)                                   /// 
-size(small)                                          ///
-rows(1))                                             /// 
-levels(95)                                           ///
-xlab(#5)                                             ///
-legend(off)                                          ///
-name(`varlist', replace) 
+
+if	 "`scale'" == "" {
+	
+ coefplot $call,                                      ///
+ xline(`var_mean',                                    /// 
+ lcolor(red))                                         ///
+ ciopts(recast(rcap))                                 ///
+ title("`: var la `varlist''",  size(medium))        ///
+ subtitle("(Mean = `var_mean')", size(small))        /// 
+ ytitle("`: var la `over' '")                         ///
+ xtitle("`: var la `varlist''")                       ///
+ mlabel                                               /// 
+ format(%9.2f)                                        /// 
+ mlabposition(12)                                     ///
+ legend(subtitle("`: var la `over' '",                /// 
+ size(small)))                                        /// 
+ legend(position(6)                                   /// 
+ size(small)                                          ///
+ rows(1))                                             /// 
+ levels(95)                                           ///
+ xlab(#5)                                       ///
+ legend(off)                                          ///
+ plotregion(margin(large))                            /// 
+ `graphopts'                                          ///
+ name(`name', replace)
+	}
+	
+	else{
+		 coefplot $call,                                      ///
+ xline(`var_mean',                                    /// 
+ lcolor(red))                                         ///
+ ciopts(recast(rcap))                                 ///
+ title("`: var la `varlist''",  size(medium))        ///
+ subtitle("(Mean = `var_mean')", size(small))        /// 
+ ytitle("`: var la `over' '")                         ///
+ xtitle("`: var la `varlist''")                       ///
+ mlabel                                               /// 
+ format(%9.2f)                                        /// 
+ mlabposition(12)                                     ///
+ legend(subtitle("`: var la `over' '",                /// 
+ size(small)))                                        /// 
+ legend(position(6)                                   /// 
+ size(small)                                          ///
+ rows(1))                                             /// 
+ levels(95)                                           ///
+ xlab(0(20)100)                                       ///
+ legend(off)                                          ///
+ plotregion(margin(large))                            /// 
+ `graphopts'                                          ///
+ name(`name', replace)
+	}
 }
 
 ********************************************************************************
-* IF by() has been specified
+* IF by() & SCALE has been specified
 ********************************************************************************
 else{
 qui levelsof `by', local(plot_levels)
@@ -139,7 +187,7 @@ means        ///
 qui{
 egen label = concat(`over'), decode p(" x ")
 replace N = N-1
-mkmat mean     /// 
+mkmat mean /// 
 	  se   /// 
 	  lb   /// 
 	  ub   /// 
@@ -151,7 +199,7 @@ mat R_`p' = R_`p''
 qui{
 levelsof `over', local(levels)
 local lbls_`p'
-foreach z of local levels {
+foreach   z of local levels {
 	local lbl_`p' : label (`over') `z'
     local lbls_`p' `" `lbls_`p'' "`lbl_`p''" "'
 }
@@ -168,7 +216,8 @@ qui local labl : value label `by'
 qui foreach l of local levels {
 		         local `by'`l' : label `labl' `l'	
 		
-		gen     cat_`l'   = "(matrix(R_`l'), se(2) df(R_`l'[5,.]) label(``by'`l''))"	
+* creating an empty variable that is labelled with the command we need - we then extract the command from the label
+		gen cat_`l'   = ""	
 		lab var cat_`l'     "(matrix(R_`l'), se(2) df(R_`l'[5,.]) label(``by'`l''))"
 			foreach v of varlist cat_* {
 						global call "$call `: var la `v''"		
@@ -183,35 +232,65 @@ qui local 	 var_mean: display %4.2f `r(mean)'
 	
 	
 /*
-making the plot using the all globals and our matrices
+making the plot using the all globals and our new matrices
 */
-coefplot $call,                                      ///
-xline(`var_mean',                                    /// 
-lcolor(red))                                         ///
-ciopts(recast(rcap))                                 ///
-title("`: var la `varlist'' (Mean = `var_mean')",    /// 
-size(medium))                                        /// 
-ytitle("`: var la `by' '")                           ///
-xtitle("`: var la `varlist''")                       ///
-mlabel                                               /// 
-format(%9.2f)                                        /// 
-mlabposition(12)                                     ///
-legend(subtitle("`: var la `over' '",                /// 
-size(small)))                                        /// 
-legend(position(6)                                   /// 
-size(small)                                          ///
-rows(1))                                             /// 
-levels(95)                                           ///
-xlab(#5)                                             ///
-legend(on)                                           ///
-name(`varlist', replace) 	
-}
 
+if	 "`scale'" == "" {
+
+ coefplot $call,                                      ///
+ xline(`var_mean',                                    /// 
+ lcolor(red))                                         ///
+ ciopts(recast(rcap))                                 ///
+ title("`: var la `varlist''",  size(medium))         ///
+ subtitle("(Mean = `var_mean')", size(small))         /// 
+ ytitle("`: var la `by' '")                           ///
+ xtitle("`: var la `varlist''")                       ///
+ mlabel                                               /// 
+ format(%9.2f)                                        /// 
+ mlabposition(12)                                     ///
+ legend(subtitle("`: var la `over' '",                /// 
+ size(small)))                                        /// 
+ legend(position(6)                                   /// 
+ size(small)                                          ///
+ rows(1))                                             /// 
+ levels(95)                                           ///
+ xlab(#5)                                             ///
+ legend(on)                                           ///
+ plotregion(margin(large))                            ///
+`graphopts'                                           ///
+ name(`name', replace)
+ }
+else{
+	 coefplot $call,                                      ///
+ xline(`var_mean',                                    /// 
+ lcolor(red))                                         ///
+ ciopts(recast(rcap))                                 ///
+ title("`: var la `varlist''",  size(medium))         ///
+ subtitle("(Mean = `var_mean')", size(small))         /// 
+ ytitle("`: var la `by' '")                           ///
+ xtitle("`: var la `varlist''")                       ///
+ mlabel                                               /// 
+ format(%9.2f)                                        /// 
+ mlabposition(12)                                     ///
+ legend(subtitle("`: var la `over' '",                /// 
+ size(small)))                                        /// 
+ legend(position(6)                                   /// 
+ size(small)                                          ///
+ rows(1))                                             /// 
+ levels(95)                                           ///
+ xlab(0(20)100)                                             ///
+ legend(on)                                           ///
+ plotregion(margin(large))                            ///
+`graphopts'                                           ///
+ name(`name', replace)
+	}
+}
 qui use `main', clear
 macro drop call
 end	
 
 
 * run the command and see
-confidently price, over(rep78) by(foreign)
-confidently price, over(rep78)
+confidently price, over(rep78) name("my_graph1") scale
+confidently price, over(rep78) by(foreign) name("my_graph2") scale
+
