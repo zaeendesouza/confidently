@@ -1,4 +1,6 @@
-# confidently
+# Confidently 
+
+## Estimate and plot sample means and confidence intervals using a 2x2 grouping
 
 This is a wrapper function for the **fantastic** package **`coefplot`**, which can be viewed [here](http://repec.sowi.unibe.ch/stata/coefplot/getting-started.html). This wrapper uses three variables, *at most*: 
 
