@@ -12,7 +12,7 @@ It also allows for various options:
 2. `IN`: Standard Stata IN condition
 3. `name()`: A unique name for viewing or storing the graph in the Stata viewer
 4. `graphopts()` : General option for passing through **any** existing Satat graph customisation
-5. `scale': To be used when `variable` is binary - if mentioned, `scale` will convert variables coded to 0 or 1, to 0 or 100, thereby scaling it to the percentage scale.
+5. `scale`: To be used when `variable` is binary. If mentioned, `scale` will convert variables coded to 0 or 1, to 0 or 100, thereby scaling it to the percentage scale.
 
 syntax varlist [if]            /// 
                [in],           /// 
