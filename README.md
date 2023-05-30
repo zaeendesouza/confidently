@@ -28,7 +28,7 @@ confidently variable [if]                       ///
 ```
 
 # Explanation
-The wrapper will then estimate the mean(s) of [`variable`], condtional on [`by()`] and/or [`over()`]. It then produces a `coefplot()` type plot with labels and titles all automatically added. Confidence intervals are estimated using "vanilla" standard errors; weights and alternative variance estimation is not allowed, at present, but I will add these soon, along with an option for plotting the median/group-specific medians, along with confidence intervals estimated via bootstrap.
+The wrapper will then estimate the mean(s) of [`variable`], condtional on [`by()`] and/or [`over()`]. It then produces a `coefplot()` type plot with labels and titles all automatically added. Confidence intervals are estimated using regular standard errors; weights and alternative variance estimation is not allowed, at present, but I will add these soon, along with an option for plotting the median/group-specific medians, along with confidence intervals estimated via bootstrap.
 
 
 # Example
