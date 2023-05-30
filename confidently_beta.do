@@ -291,6 +291,6 @@ end
 
 
 * run the command and see
-confidently price, over(rep78) name("my_graph1") scale
-confidently price, over(rep78) by(foreign) name("my_graph2") scale
+confidently price, over(rep78) name("my_graph1")
+confidently price, over(rep78) by(foreign) name("my_graph2")
 
