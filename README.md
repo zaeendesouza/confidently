@@ -13,8 +13,11 @@ plot_confidently varlist [IF] [IN], [over(varname)] [by(varname)] [graphopts()] 
 4. `scale`: Allows the user to scale the Y-Axis to the percentage scale. Useful for visualizing percentages, proportions and rates.
 
 
+# Installation
+```
+ssc install plot_confidently, replace
+```
 # Examples
-
 ```
 sysuse auto.dta, clear
 label define quality 1 "Poor" 2 "Fair" 3 "Average" 4 "Good" 5 "Excellent"
